@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %} Confirm Delete - {{ note.title }} {% endblock %}
+
+{% block header %} Delete Sticky Note  {% endblock header %}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="text-center border rounded p-4 shadow-sm bg-light">
+        {% block content %}
+            <h2 class="mb-3 text-danger" style="font-weight: bolder;">Are you sure you want to delete "{{ note.title }}"?</h2>
+            <p class="mb-4" style="color: white; font-size: 20px">This action cannot be undone.</p>
+
+            <form method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger me-2">Yes, delete</button>
+                <a class="btn btn-secondary" href="{% url 'notes_list' %}">Cancel</a>
+            </form>
+        {% endblock %}
+    </div>
+</div>
+
+{% comment %}
+confirm_delete.html
+
+Purpose:
+--------
+This template renders a confirmation page asking the user to confirm 
+deletion of a selected note. It uses Bootstrap for layout and styling.
+
+Blocks:
+-------
+- title: Sets the page title dynamically using the note’s title.
+- header: Displays the page heading.
+- content: Shows the delete confirmation form with "Yes, delete" and "Cancel" buttons.
+{% endcomment %}

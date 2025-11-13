@@ -1,0 +1,86 @@
+{% extends 'base.html' %} {% block title %} Sticky Notes - {{ note.title }} 
+{% endblock %} 
+
+{% block header %}  '{{ note.title }}' Details {% endblock header %}
+
+{% block content %}
+    <div class="container d-flex justify-content-center mt-5">
+        <div class="card shadow-sm p-4 w-75">
+            <div class="card-body text-center">
+                <h2 class="card-title mb-3 text-primary"> {{ note.title }} </h2>
+                <p class="card-text fs-5"> {{ note.content }} </p>
+                <hr>
+
+                <p class="text-muted">
+                    <small>Created On: {{ note.created_at }} </small>
+                </p>
+
+                <p class="text-muted">
+                    <small style="color: darkRed;">Last Updated: {{ note.updated_on }} </small>
+                </p>
+
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    
+                    <a href="{% url 'update_note' pk=note.pk %}" class="btn btn-info">
+                    <i class="bi bi-pencil-square"></i> Update
+                    </a>
+
+                    <a href="{% url 'delete_note' pk=note.pk %}" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Delete
+                    </a>
+
+                    <a href="{% url 'notes_list' %}" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Back
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% comment %} 
+note_detail.html (Note Detail Page)
+
+Purpose:
+--------
+This template displays the details of a single note in the Sticky Notes app.
+It shows the note's title, content, and creation date, and provides 
+action buttons for updating, deleting, or returning to the notes list.
+
+Features:
+---------
+- Extends base.html to inherit the common header, layout, and styling.
+- Displays note details in a centered Bootstrap card for clean UI.
+- Includes action buttons:
+    - Update: Redirects to the edit form for the note.
+    - Delete: Redirects to the confirmation delete page.
+    - Back: Returns to the main notes list.
+- Uses Bootstrap classes for responsive design and layout.
+- Uses Bootstrap Icons for buttons (pencil, trash, arrow).
+
+Template Blocks:
+----------------
+- title: Sets the browser tab title dynamically with the note's title.
+- header: Displays the note title as the page header.
+- content: Contains the card displaying the note details and action buttons.
+
+Included Libraries:
+-------------------
+- Bootstrap 5 for responsive layout and styling.
+- Bootstrap Icons for visual icons.
+- Inherits custom CSS from base.html (notes/styles.css).
+
+Usage:
+------
+This template is rendered by the `get_note` view in views.py, passing 
+the selected note object as context.
+
+Reference: https://getbootstrap.com/docs/4.4/components/buttons/
+Icons: https://icons.getbootstrap.com/?q=edit
+
+{% endcomment %}
+

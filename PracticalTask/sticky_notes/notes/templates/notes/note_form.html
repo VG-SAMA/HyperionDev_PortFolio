@@ -1,0 +1,103 @@
+{% extends 'base.html' %} 
+{% load bootstrap5 %}
+
+
+{% block title %} Sticky Notes - 
+{% if form.instance.pk %} Edit {% else %} Create {% endif %} Note {% endblock %} 
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">
+                {% if form.instance.pk %} Edit {% else %} Create {% endif %} Note
+            </h4>
+        </div>
+
+        <div class="card-body">
+            <form 
+                method="post"
+                action="{% if form.instance.pk %}{% url 'update_note' pk=form.instance.pk %}{% else %}{% url 'create_note' %}{% endif %}"
+                id="noteForm">
+                
+                {% csrf_token %}
+                {% bootstrap_form form layout='vertical' %}
+
+                <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3">
+                    <a href="{% url 'notes_list' %}" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to Notes List
+                    </a>
+
+                    {% if not form.instance.pk %}
+
+                    <button type="button" class="btn btn-danger" onclick="resetForm()">
+                        <i class="bi bi-arrow-counterclockwise"></i> Reset
+                    </button>
+
+                    {% endif %}
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-save"></i> Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function resetForm() {
+    if (confirm("Are you sure you want to reset all fields?")) {
+        document.getElementById("noteForm").reset();
+    }
+}
+</script>
+{% endblock %}
+
+
+{% comment %} 
+note_form.html (Create/Edit Note Page)
+
+Purpose:
+--------
+This template provides a form for creating a new note or editing an existing note
+in the Sticky Notes application. The form is dynamically adjusted based on 
+whether a note instance is being edited or a new note is being created.
+
+Features:
+---------
+- Extends base.html to inherit consistent layout, header, and styling.
+- Displays the form in a centered Bootstrap card with shadow for visual clarity.
+- Uses Django's NoteForm model form to bind the Note model fields.
+- Renders the form using {% bootstrap_form %} with a vertical layout.
+- Provides action buttons:
+    - Save: Submits the form to create or update the note.
+    - Reset: Clears all form fields (confirmation required).
+    - Back to Notes List: Returns to the main notes list.
+- Uses Bootstrap classes for responsive design, spacing, and alignment.
+- Uses Bootstrap Icons for buttons (save, reset, back arrow).
+- Includes a small JavaScript function for the Reset button with confirmation.
+
+Template Blocks:
+----------------
+- title: Sets the browser tab title dynamically (Create or Edit Note).
+- content: Contains the form, action buttons, and JavaScript for Reset functionality.
+
+Included Libraries:
+-------------------
+- Bootstrap 5 for styling and layout.
+- Bootstrap Icons for button icons.
+- Inherits custom CSS from base.html (notes/styles.css).
+
+Usage:
+------
+This template is rendered by the `create_note` and `update_note` views
+in views.py. The `form` context variable is required and should be
+an instance of NoteForm.
+
+Reference: 
+https://getbootstrap.com/docs/4.4/components/forms/
+Resetting a form: https://www.w3schools.com/jsref/met_form_reset.asp
+Bootstrap django forms: https://django-bootstrap5.readthedocs.io/en/latest/index.html
+
+{% endcomment %}

@@ -1,0 +1,106 @@
+{% extends 'base.html' %} 
+
+{% block title %} Sticky Notes - {{ page_title }} {% endblock %} 
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 style="color:black; font-weight: bolder">{{ page_title }}</h2>
+            <a href="{% url 'create_note' %}" class="btn btn-primary">
+                <i class="bi bi-plus-lg"></i>
+                Add New Note</a>
+    </div>
+
+
+    <div class="container mt-4">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <form method="get" class="d-flex" role="search">
+                    <input 
+                        type="text" 
+                        name="q" 
+                        class="form-control me-2" 
+                        placeholder="Search notes..."
+                        value="{{ request.GET.q|default:'' }}"
+                    >
+                    <button class="btn btn-dark me-2" type="submit">
+                        Search
+                    </button>
+                    <a href="{% url 'notes_list' %}" class="btn btn-dark">
+                        Reset
+                    </a>
+                </form>
+            </div>
+
+    </div>
+
+</div>
+
+    <div class="row">
+        {% for note in notes %}
+            <div class="col-sm-4 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <label style="font-weight: bolder;color: darkCyan;padding-bottom: 15px;font-size: 25px; text-truncate">{{ note.title }} </label>
+                        <h6 class="card-subtitle mb-2 text-truncate">{{ note.content }}</h6>
+                        <label class="card-link" style="font-weight: bolder">Created: {{ note.created_at }}</label>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between">
+                        <a href="{% url 'get_note' pk=note.pk %}" class="btn btn-primary btn-sm">View</a>
+                        <a href="{% url 'update_note' pk=note.pk %}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'delete_note' pk=note.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% comment %} 
+notes_list.html (Notes Listing Page)
+
+Purpose:
+--------
+This template displays all the sticky notes stored in the application
+and provides functionality to search, view, edit, or delete notes. 
+
+Features:
+---------
+- Extends base.html to inherit consistent layout, header, and styling.
+- Shows page title dynamically using {{ page_title }} context variable.
+- Provides a responsive Bootstrap card layout to display individual notes.
+- Includes a search form to filter notes by title or content.
+- Includes Reset button to clear search and reload all notes.
+- Each note card displays:
+    - Title (bold, truncated if too long)
+    - Content (truncated for layout consistency)
+    - Creation date
+- Action buttons on each card:
+    - View: Navigates to note_detail.html to see full note.
+    - Edit: Navigates to note_form.html to edit the note.
+    - Delete: Navigates to confirm deletion page.
+- Uses Bootstrap 5 grid system for responsive layout.
+- Uses inline styles minimally; most styling handled by Bootstrap classes.
+
+Template Blocks:
+----------------
+- title: Sets the browser tab title dynamically based on the page.
+- content: Contains the search form, notes cards, and action buttons.
+
+Included Libraries:
+-------------------
+- Bootstrap 5 for layout, styling, and buttons.
+- Inherits custom CSS from base.html (notes/styles.css).
+
+Usage:
+------
+This template is rendered by the `note_list` view in views.py. 
+The `notes` context variable must contain a queryset of Note objects.
+The `request.GET.q` value is used to prefill the search input when filtering notes.
+
+References: https://getbootstrap.com/docs/4.4/components/card/ 
+
+{% endcomment %}

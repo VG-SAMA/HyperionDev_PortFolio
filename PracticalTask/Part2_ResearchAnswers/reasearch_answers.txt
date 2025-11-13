@@ -1,0 +1,25 @@
+1) Conduct research to understand how HTTP applications preserve the state of an application across multiple request-response cycles, especially concerning user authentication and session management. 
+   Write a paragraph describing your findings.
+	
+Answer: 
+HTTP is inherently stateless, meaning each request from a client to a server is processed independently and the server retains no built‑in memory of prior requests. To handle features like user authentication and session continuity, web applications implement additional mechanisms: a server generates a unique session identifier (often stored in a cookie) for the user when they log in, and this identifier is sent with subsequent requests so the server can look up user state (such as login status or preferences) in a session store. As such, session management enables persistence of user-specific state across multiple request–response cycles, making authenticated experiences and personalized interactions possible.
+
+
+References: 
+https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides
+https://cheatsheetseries.owasp.org/cheatsheets/Session_Management_Cheat_Sheet.html
+https://mojoauth.com/blog/session-management-a-beginners-guide-for-web-developers
+
+
+
+
+2) Investigate and document the procedures for performing Django database migrations to a server-based relational database like MariaDB. 
+   Write a paragraph describing your findings.
+
+Answer:
+When using Django with a production‑grade relational database like MariaDB, migrations serve to evolve the database schema in step with changes in Django models. Migrations are declarative Python files that record operations, such as creating tables, adding fields, or altering indexes, so that Django can apply the correct changes to the target database backend. 
+The migration process typically involves configuring the DATABASE setting in "settings.py" to use the MariaDB backend, then running "python manage.py makemigrations" to generate migration files and "python manage.py migrate" to apply them to the server‑based database. Guides and community resources highlight that care must be taken when using production systems (especially large tables or live traffic) to avoid downtime or compatibility issues when altering schema in one step.
+
+References:
+https://django.readthedocs.io/en/5.1.x/intro/tutorial02.html
+https://docs.djangoproject.com/en/5.2/ref/migration-operations/
