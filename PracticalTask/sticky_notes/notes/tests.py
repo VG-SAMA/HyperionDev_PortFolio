@@ -31,6 +31,10 @@ class TestNotesModel(TestCase):
         Note.objects.create(title='TestingNote', content='TestingNoteContent')
         Note.objects.create(title='Note2', content='Content1')
 
+    def test_create_note(self):
+        note = Note.objects.create(title='CreateTest', content='CreateContent')
+        self.assertEqual(note.title, 'CreateTest')
+
     def test_note_has_title(self):
         """Verify that a Note instance has the correct title."""
         note = Note.objects.get(id=1)
@@ -91,3 +95,52 @@ class TestNoteView(TestCase):
         self.assertContains(response, 'TestingNoteContent')
 
         self.assertTemplateUsed(response, 'notes/note_detail.html')
+
+    def test_create_note_view(self):
+        """Test that a new note is created successfully via POST."""
+        url = reverse('create_note')
+        response = self.client.post(
+            url,
+            {
+                'title': 'CreateViewNote',
+                'content': 'Testing create note view, that i forgot to add yesterday',
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(Note.objects.get(id=1).title, 'CreateViewNote')
+
+    def test_update_view(self):
+        """Test updating an existing note via POST request."""
+        note = Note.objects.get(id=1)
+        url = reverse('update_note', args=[note.pk])
+
+        new_data = {'title': 'Updated', 'content': 'Updated content'}
+
+        response = self.client.post(url, data=new_data)
+
+        self.assertEqual(response.status_code, 302)
+
+        # refresh db for the note thats already stored
+        note.refresh_from_db()
+
+        # test title and content again
+        self.assertEqual(note.title, 'Updated')
+        self.assertEqual(note.content, 'Updated content')
+
+    def test_delete_note_view(self):
+        """Test deleteing an existing note via POST request."""
+        note = Note.objects.get(id=1)
+
+        # get delete view
+        response = self.client.get(reverse('delete_note', args=[note.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "notes/confirm_delete.html")
+
+        # delete note
+        response = self.client.post(reverse('delete_note', args=[note.pk]))
+        self.assertRedirects(response, reverse('notes_list'))
+
+        # verify it was deleted, similar to the method in the model test
+        with self.assertRaises(Note.DoesNotExist):
+            Note.objects.get(id=1)
